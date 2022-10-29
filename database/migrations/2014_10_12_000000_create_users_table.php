@@ -15,8 +15,10 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name')->default('');
-            $table->string('last_name')->default('');
+            $table->string('name')->default('');
+            $table->text('location')->nullable();
+            $table->text('fav_location')->nullable();
+            $table->longText('bio')->nullable();
             $table->string('phone_no')->unique();
             $table->string('email')->default('');
             $table->timestamp('email_verified_at')->nullable();
@@ -24,6 +26,8 @@ return new class extends Migration
             $table->string('password')->default('');
             $table->string('otp')->default('');
             $table->string('image')->default('');
+            $table->string('parent_key')->default('');
+            $table->enum('account_type',['parent','children'])->default('parent');
             $table->rememberToken();
             $table->timestamps();
         });

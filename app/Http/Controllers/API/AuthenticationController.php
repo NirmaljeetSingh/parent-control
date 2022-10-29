@@ -69,8 +69,10 @@ class AuthenticationController extends Controller
     public function profileUpdate(Request $request)
     {
         $params = [];
-        if($request->first_name) $params['first_name'] = $request->first_name;
-        if($request->last_name) $params['last_name'] = $request->last_name;
+        if($request->name) $params['name'] = $request->name;
+        if($request->location) $params['location'] = $request->location;
+        if($request->fav_location) $params['fav_location'] = $request->fav_location;
+        if($request->bio) $params['bio'] = $request->bio;
         // if($request->email) $params['email'] = $request->email;
         auth()->user()->update($params);
         return success_response(User::find(auth()->user()->id),'Profile updated.');

@@ -20,14 +20,18 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'first_name',
-        'last_name',
+        'name',
         'phone_no',
         'email',
         'password',
         'otp',
         'image',
-        'phone_no_verified_at'
+        'phone_no_verified_at',
+        'location',
+        'fav_location',
+        'bio',
+        'parent_key',
+        'account_type'
     ];
 
     /**
@@ -62,6 +66,24 @@ class User extends Authenticatable
     {
         return Attribute::make(
             get: fn ($value) => ($value) ? asset($value) : $value,
+        );
+    }
+    protected function location(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => ($value) ? $value : "",
+        );
+    }
+    protected function favLocation(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => ($value) ? $value : "",
+        );
+    }
+    protected function bio(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => ($value) ? $value : "",
         );
     }
     public function setting()
