@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\{AuthenticationController};
+use App\Http\Controllers\API\{AuthenticationController,SettingController,StoriesController};
 
 /*
 |--------------------------------------------------------------------------
@@ -26,5 +26,8 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::post('profile',[AuthenticationController::class,'profileUpdate']);
     Route::get('profile',[AuthenticationController::class,'profile']);
 
+    Route::resource('setting',SettingController::class);
+    
+    Route::resource('story',StoriesController::class);
     
 });
