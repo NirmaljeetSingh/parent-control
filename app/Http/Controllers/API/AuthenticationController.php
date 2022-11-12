@@ -12,7 +12,8 @@ class AuthenticationController extends Controller
     public function login(Request $request)
     {
         if($er = __validation($request->all(),['phone_no' => 'required'])) return $er;
-        $user = User::where('phone_no',$request->phone_no)->first();
+        $phone_no = '+'.$request->phone_no;
+        $user = User::where('phone_no',$phone_no)->first();
         if(!$user)
         {
             $user = User::create($request->all());
@@ -25,7 +26,7 @@ class AuthenticationController extends Controller
         $user->otp = $otp;
         $user->save();
         try {
-            self::sms($request->phone_no,$otp);
+            self::sms($phone_no,$otp);
         } catch (\Throwable $th) {
             return error_response([],'SMS not send due to '.$th->getMessage());
         }
