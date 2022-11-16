@@ -13,7 +13,7 @@ class AuthenticationController extends Controller
     {
         if($er = __validation($request->all(),['phone_no' => 'required'])) return $er;
         $phone_no = '+'.$request->phone_no;
-        $user = User::where('phone_no',$phone_no)->first();
+        $user = User::where('phone_no',$request->phone_no)->first();
         if(!$user)
         {
             $user = User::create($request->all());
