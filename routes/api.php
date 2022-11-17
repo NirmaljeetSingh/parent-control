@@ -2,7 +2,12 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\{AuthenticationController,SettingController,StoriesController};
+use App\Http\Controllers\API\{
+            AuthenticationController,
+            SettingController,
+            StoriesController,
+            FriendRequestController
+        };
 
 /*
 |--------------------------------------------------------------------------
@@ -29,5 +34,12 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::resource('setting',SettingController::class);
     
     Route::resource('story',StoriesController::class);
+
+    Route::resource('friend-request',FriendRequestController::class);
+    Route::get('pending-friend-request',[FriendRequestController::class,'friendRequests']);
+
+    Route::post('friend-request-accept',[FriendRequestController::class,'approveRequest']);
+    Route::post('friend-request-reject',[FriendRequestController::class,'rejectRequest']);
+    Route::post('friend-request-block',[FriendRequestController::class,'blockFriend']);
     
 });

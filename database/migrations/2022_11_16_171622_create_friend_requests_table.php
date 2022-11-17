@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('user_id')->default(0);
             $table->bigInteger('friend_user_id')->default(0);
-            $table->enum('request',['pending','accepted','blocked'])->default('pending');
+            $table->enum('request',['pending','accepted','reject','blocked'])->default('pending');
             $table->timestamps();
         });
     }

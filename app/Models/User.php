@@ -62,6 +62,12 @@ class User extends Authenticatable
     //         get: fn ($value) => $this->first_name.' '.$this->last_name,
     //     );
     // }
+    protected function phoneNo(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => ($value) ? '+'.$value : $value,
+        );
+    }
     protected function image(): Attribute
     {
         return Attribute::make(
