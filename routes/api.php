@@ -34,6 +34,7 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::resource('setting',SettingController::class);
     
     Route::resource('story',StoriesController::class);
+    Route::get('my-stories',[StoriesController::class,'myStories']);
 
     Route::resource('friend-request',FriendRequestController::class);
     Route::get('pending-friend-request',[FriendRequestController::class,'friendRequests']);
