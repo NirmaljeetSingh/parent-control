@@ -4,8 +4,9 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{Story,FriendRequest};
+use App\Models\{Story,FriendRequest,StoryView};
 use Auth;
+use App\Events\ActionEvent;
 
 class StoriesController extends Controller
 {
@@ -35,5 +36,19 @@ class StoriesController extends Controller
             'user_id' => Auth::user()->id
         ]);
         return success_response(Story::find($story->id),'Data saved successfully');
+    }
+    public function storySeen(Request $request)
+    {
+        $actionId = "score_update";
+        $actionData = array("team1_score" => 46);
+        event(new ActionEvent($actionId, $actionData));
+        return 'event';
+        // $rules = [
+        //     'story_id' => 'required|exists:stories,id',
+        // ];
+        // if($er = __validation($request->all(),$rules)) return $er;
+
+        // $data = StoryView::updateOrCreate(['story_id' => $request->story_id,'user_id' => auth()->user()->id]);
+        // return success_response($data,'Data fetch successfully');
     }
 }
