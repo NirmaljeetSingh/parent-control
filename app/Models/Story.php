@@ -15,10 +15,23 @@ class Story extends Model
         'description',
         'user_id'
     ];
+    protected $appends = [
+        'seen'
+    ];
     protected function image(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => ($value) ? asset($value) : $value,
         );
+    }
+    protected function seen(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => StoryView::where([['story_id',$this->id],['user_id',auth()->user()->id]])->exists(),
+        );
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
