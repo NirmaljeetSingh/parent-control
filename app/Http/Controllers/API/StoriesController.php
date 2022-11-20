@@ -39,16 +39,16 @@ class StoriesController extends Controller
     }
     public function storySeen(Request $request)
     {
-        $actionId = "score_update";
-        $actionData = array("team1_score" => 46);
-        event(new ActionEvent($actionId, $actionData));
-        return 'event';
-        // $rules = [
-        //     'story_id' => 'required|exists:stories,id',
-        // ];
-        // if($er = __validation($request->all(),$rules)) return $er;
+        // $actionId = "score_update";
+        // $actionData = array("team1_score" => 46);
+        // event(new ActionEvent($actionId, $actionData));
+        // return 'event';
+        $rules = [
+            'story_id' => 'required|exists:stories,id',
+        ];
+        if($er = __validation($request->all(),$rules)) return $er;
 
-        // $data = StoryView::updateOrCreate(['story_id' => $request->story_id,'user_id' => auth()->user()->id]);
-        // return success_response($data,'Data fetch successfully');
+        $data = StoryView::updateOrCreate(['story_id' => $request->story_id,'user_id' => auth()->user()->id]);
+        return success_response($data,'Data fetch successfully');
     }
 }
