@@ -62,18 +62,21 @@ class FriendRequestController extends Controller
     }
     public function findFriend(Request $request)
     {
-        $rules = [
-            'search' => ['required'],
-        ];
-        if($er = __validation($request->all(),$rules)) return $er;
-        $search = $request->search;
+        // $rules = [
+        //     'search' => ['required'],
+        // ];
+        // if($er = __validation($request->all(),$rules)) return $er;
+        $search = $request->search ?? '';
         $user_id = auth()->user()->id;
         $friends =  FriendRequest::where(function($rr) use($user_id){
             $rr->where('user_id',$user_id)->orWhere('friend_user_id',$user_id);
         })->where('request','accepted')->get()->each(function($qr) use($user_id){
             $qr->_id = ($qr->user_id == $user_id) ? $qr->friend_user_id : $qr->user_id;
         })->pluck('_id')->toArray();
-        $findFriend = User::where('phone_no','LIKE',"%{$search}%")->whereNot('id',auth()->user()->id)->get()->each(function($collection) use($friends){
+        $findFriend = User::when($search,function($qr) use($search){
+                $qr->where('phone_no','LIKE',"%{$search}%");
+            })
+            ->whereNot('id',auth()->user()->id)->get()->each(function($collection) use($friends){
             $collection->is_friend = in_array($collection->id,$friends);
         });
         return success_response($findFriend,'Friend request blocked.');
