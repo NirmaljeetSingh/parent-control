@@ -20,4 +20,12 @@ class FriendRequest extends Model
      *  blocked 
      * *******************************
      */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function friend_user()
+    {
+        return $this->belongsTo(User::class,'friend_user_id');
+    }
 }

@@ -55,13 +55,31 @@ class User extends Authenticatable
         'phone_no_verified_at' => 'datetime',
     ];
 
-    // protected $appends = ['full_name'];
-    // protected function fullName(): Attribute
-    // {
-    //     return Attribute::make(
-    //         get: fn ($value) => $this->first_name.' '.$this->last_name,
-    //     );
-    // }
+    protected $appends = ['is_request'];
+    protected function isRequest(): Attribute
+    {
+        $requested = 0;
+        try {
+            if($this->id != auth()->user()->id)
+            {
+                $get = FriendRequest::where([['friend_user_id',auth()->user()->id],['user_id',$this->id]])
+                            ->orWhere([['friend_user_id',$this->id],['user_id',auth()->user()->id]])->first();
+                if($get)
+                {
+                    if($get->request == 'pending') $requested = 1;
+                    elseif($get->request == 'accepted') $requested = 2;
+                    elseif($get->request == 'reject') $requested = 3;
+                    elseif($get->request == 'blocked') $requested = 4;
+                }
+            }
+        } catch (\Throwable $th) {
+            // throw $th;
+            // $requested = 9;
+        }
+        return Attribute::make(
+            get: fn ($value) => $requested,
+        );
+    }
     protected function phoneNo(): Attribute
     {
         return Attribute::make(

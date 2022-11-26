@@ -27,7 +27,12 @@ class FriendRequestController extends Controller
     }
     public function friendRequests(Request $request)
     {
-        $getFriend = FriendRequest::where('friend_user_id',auth()->user()->id)->get();
+        $getFriend = FriendRequest::with(['user','friend_user'])->where('friend_user_id',auth()->user()->id)->orWhere('user_id',auth()->user()->id)->get();
+        $getFriend->each(function($val){
+            $val->request_user = ($val->user_id == auth()->user()->id) ? $val->friend_user : $val->user;
+            unset($val->user);
+            unset($val->friend_user);
+        });
         return success_response($getFriend,'Pending request list fetch successfully.');
     }
     public function approveRequest(Request $request)
