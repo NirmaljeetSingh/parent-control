@@ -16,9 +16,9 @@ class SettingController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'story_presentation' => 'required',
-            'chat_notification' => 'required',
-            'post_notification' => 'required',
+            // 'story_presentation' => 'required',
+            // 'chat_notification' => 'required',
+            // 'post_notification' => 'required',
         ];
         if($er = __validation($request->all(),$rules)) return $er;
 
