@@ -18,7 +18,7 @@ class FriendRequestController extends Controller
         $getFriend = FriendRequest::where([['user_id',auth()->user()->id],['friend_user_id',$request->friend_user_id]])->orWhere([['friend_user_id',auth()->user()->id],['user_id',$request->friend_user_id]])->first();
         if(auth()->user()->id == $request->friend_user_id) return error_response([],'Cannot make your self as a friend.',400);
         if(!$getFriend) $getFriend = FriendRequest::create(['user_id' => auth()->user()->id,'friend_user_id' => $request->friend_user_id]);
-        return success_response($getFriend,'Request sent successfully.');
+        return success_response(FriendRequest::find($getFriend->id),'Request sent successfully.');
     }
     public function index(Request $request)
     {
