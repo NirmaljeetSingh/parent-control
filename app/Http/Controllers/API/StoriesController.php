@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\{Story,FriendRequest,StoryView};
 use Auth;
 use App\Events\ActionEvent;
+use Carbon\Carbon;
 
 class StoriesController extends Controller
 {
@@ -18,8 +19,9 @@ class StoriesController extends Controller
         })->where('request','accepted')->get()->each(function($qr) use($user_id){
             $qr->_id = ($qr->user_id == $user_id) ? $qr->friend_user_id : $qr->user_id;
         })->pluck('_id');
-        $my_stories = Story::where('user_id',Auth::user()->id)->get();
-        $all_stories = Story::with('user')->whereIn('user_id',$friends)->get();
+        $date = Carbon::now()->subHours(24)->toDateTimeString();
+        $my_stories = Story::where('user_id',Auth::user()->id)->where('created_at','>',$date)->get();
+        $all_stories = Story::with('user')->whereIn('user_id',$friends)->where('created_at','>',$date)->get();
         return success_response(['my_stories' => $my_stories,'all_stories' => $all_stories],'Data fetch successfully');
     }
     public function myStories(Request $request)
