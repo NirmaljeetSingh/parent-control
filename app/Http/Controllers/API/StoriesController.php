@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{Story,FriendRequest,StoryView};
+use App\Models\{Story,FriendRequest,StoryView,User};
 use Auth;
 use App\Events\ActionEvent;
 use Carbon\Carbon;
@@ -19,10 +19,12 @@ class StoriesController extends Controller
         })->where('request','accepted')->get()->each(function($qr) use($user_id){
             $qr->_id = ($qr->user_id == $user_id) ? $qr->friend_user_id : $qr->user_id;
         })->pluck('_id');
-        $date = Carbon::now()->subHours(24)->toDateTimeString();
-        $my_stories = Story::where('user_id',Auth::user()->id)->where('created_at','>',$date)->get();
-        $all_stories = Story::with('user')->whereIn('user_id',$friends)->where('created_at','>',$date)->get();
-        return success_response(['my_stories' => $my_stories,'all_stories' => $all_stories],'Data fetch successfully');
+        
+        // $my_stories = Story::where('user_id',Auth::user()->id)->where('created_at','>',$date)->get();
+        // $all_stories = Story::with('user')->whereIn('user_id',$friends)->where('created_at','>',$date)->get();
+        $friends[count($friends)] = $user_id;
+        $stories = User::with('story')->whereHas('story')->whereIn('id',$friends)->get();
+        return success_response($stories,'Data fetch successfully');
     }
     public function myStories(Request $request)
     {

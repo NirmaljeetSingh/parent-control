@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Carbon\Carbon;
 
 
 class User extends Authenticatable
@@ -113,5 +114,10 @@ class User extends Authenticatable
     public function setting()
     {
         return $this->hasOne(Setting::class);
+    }
+    public function story()
+    {
+        $date = Carbon::now()->subHours(24)->toDateTimeString();
+        return $this->hasMany(Story::class)->where('created_at','>',$date);
     }
 }
