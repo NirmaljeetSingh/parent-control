@@ -13,6 +13,11 @@ class StoriesController extends Controller
 {
     public function index(Request $request)
     {
+        if($request->type && $request->type == 'parent')
+        {
+            $stories = User::with('story')->whereHas('story')->whereIn('id',$request->user_id)->get();
+            return success_response($stories,'Data fetch successfully');
+        }
         $user_id = auth()->user()->id;
         $friends =  FriendRequest::where(function($rr) use($user_id){
             $rr->where('user_id',$user_id)->orWhere('friend_user_id',$user_id);

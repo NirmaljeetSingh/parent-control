@@ -45,5 +45,6 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::post('friend-request-block',[FriendRequestController::class,'blockFriend']);
     
     Route::get('find-friend',[FriendRequestController::class,'findFriend']);
+    Route::get('find-parent',[FriendRequestController::class,'searchParent']);
     
 });
