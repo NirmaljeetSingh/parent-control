@@ -15,7 +15,7 @@ class StoriesController extends Controller
     {
         if($request->type && $request->type == 'parent')
         {
-            $stories = User::with('story')->whereHas('story')->whereIn('id',$request->user_id)->get();
+            $stories = User::with('story')->whereHas('story')->where('id',$request->user_id)->get();
             return success_response($stories,'Data fetch successfully');
         }
         $user_id = auth()->user()->id;
