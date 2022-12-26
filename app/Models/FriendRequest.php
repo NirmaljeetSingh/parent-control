@@ -9,7 +9,7 @@ class FriendRequest extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id','friend_user_id','request'];
+    protected $fillable = ['user_id','friend_user_id','request','type'];
 
     /**
      * *******************************
@@ -19,6 +19,9 @@ class FriendRequest extends Model
      *  reject
      *  blocked 
      * *******************************
+     * @ type
+     * parent
+     * friend
      */
     public function user()
     {

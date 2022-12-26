@@ -14,10 +14,13 @@ class FriendRequestController extends Controller
             'friend_user_id' => ['required','exists:users,id'],
         ];
         if($er = __validation($request->all(),$rules)) return $er;
+        
+        $storeData = ['user_id' => auth()->user()->id,'friend_user_id' => $request->friend_user_id];
+        if($request->type && $request->type == 'parent') $storeData['type'] = 'parent';
 
         $getFriend = FriendRequest::where([['user_id',auth()->user()->id],['friend_user_id',$request->friend_user_id]])->orWhere([['friend_user_id',auth()->user()->id],['user_id',$request->friend_user_id]])->first();
         if(auth()->user()->id == $request->friend_user_id) return error_response([],'Cannot make your self as a friend.',400);
-        if(!$getFriend) $getFriend = FriendRequest::create(['user_id' => auth()->user()->id,'friend_user_id' => $request->friend_user_id]);
+        if(!$getFriend) $getFriend = FriendRequest::create($storeData);
         return success_response(FriendRequest::find($getFriend->id),'Request sent successfully.');
     }
     public function index(Request $request)
@@ -87,6 +90,16 @@ class FriendRequestController extends Controller
             ->whereNot('id',auth()->user()->id)->get()->each(function($collection) use($friends){
             $collection->is_friend = in_array($collection->id,$friends);
         });
-        return success_response($findFriend,'Friend request blocked.');
+        return success_response($findFriend,'Friend search.');
+    }
+    public function searchParent(Request $request)
+    {
+        $search = $request->search ?? '';
+        if(!$search) return error_response([],'Please search number',400);
+        $findFriend = User::when($search,function($qr) use($search){
+                $qr->where('phone_no','LIKE',"%{$search}%");
+            })
+            ->whereNot('id',auth()->user()->id)->get();
+        return success_response($findFriend,'Friend search.');
     }
 }
