@@ -13,12 +13,14 @@ class StoriesController extends Controller
 {
     public function index(Request $request)
     {
-        // if($request->type && $request->type == 'parent')
-        // {
-        //     $stories = User::with('story')->whereHas('story')->where('id',$request->user_id)->get();
-        //     return success_response($stories,'Data fetch successfully');
-        // }
         $user_id = auth()->user()->id;
+        if($request->type && $request->type == 'parent')
+        {
+            // $stories = User::with('story')->whereHas('story')->where('id',$request->user_id)->get();
+            // return success_response($stories,'Data fetch successfully');
+            $user_id = $request->user_id;
+        }
+        
         $friends =  FriendRequest::where(function($rr) use($user_id){
             $rr->where('user_id',$user_id)->orWhere('friend_user_id',$user_id);
         })->where('request','accepted')->whereType('friend')->get()
@@ -33,9 +35,10 @@ class StoriesController extends Controller
         // return $friends;
         // $my_stories = Story::where('user_id',Auth::user()->id)->where('created_at','>',$date)->get();
         // $all_stories = Story::with('user')->whereIn('user_id',$friends)->where('created_at','>',$date)->get();
-        $friends[count($friends)] = $user_id;
-        $stories = User::with('story')->whereHas('story')->whereIn('id',$friends)->get();
-        return success_response($stories,'Data fetch successfully');
+        // $friends[count($friends)] = $user_id;
+        $myStories = User::with('story')->whereHas('story')->whereIn('id',$friends)->get();
+        $allStories = User::with('story')->whereHas('story')->where('id',$user_id)->get();
+        return success_response(['myStories' => $myStories,'allStories' => $allStories],'Data fetch successfully');
     }
     public function myStories(Request $request)
     {
