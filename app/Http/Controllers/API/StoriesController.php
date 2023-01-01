@@ -36,8 +36,8 @@ class StoriesController extends Controller
         // $my_stories = Story::where('user_id',Auth::user()->id)->where('created_at','>',$date)->get();
         // $all_stories = Story::with('user')->whereIn('user_id',$friends)->where('created_at','>',$date)->get();
         // $friends[count($friends)] = $user_id;
-        $myStories = User::with('story')->whereHas('story')->whereIn('id',$friends)->get();
-        $allStories = User::with('story')->whereHas('story')->where('id',$user_id)->get();
+        $allStories = User::with('story')->whereHas('story')->whereIn('id',$friends)->get();
+        $myStories = User::with('story')->whereHas('story')->where('id',$user_id)->get();
         return success_response(['myStories' => $myStories,'allStories' => $allStories],'Data fetch successfully');
     }
     public function myStories(Request $request)
