@@ -28,6 +28,11 @@ class FriendRequestController extends Controller
         $getFriend = FriendRequest::where('user_id',auth()->user()->id)->orWhere('friend_user_id',auth()->user()->id)->get();
         return success_response($getFriend,'Friend list fetch successfully.');
     }
+    public function childrenGet(Request $request)
+    {
+        $getFriend = FriendRequest::with('user')->where('friend_user_id',auth()->user()->id)->whereType('parent')->get();
+        return success_response($getFriend,'Children get');
+    }
     public function friendRequests(Request $request)
     {
         $getFriend = FriendRequest::with('user')->where('friend_user_id',auth()->user()->id)
