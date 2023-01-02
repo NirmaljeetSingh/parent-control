@@ -28,10 +28,10 @@ class StoriesController extends Controller
             $qr->_id = ($qr->user_id == $user_id) ? $qr->friend_user_id : $qr->user_id;
         })->pluck('_id');
         // return $friends;
-        $friendsParent =  FriendRequest::whereTypeAndRequest('parent','accepted')->where('friend_user_id',auth()->user()->id)->pluck('id')->toArray();
-        for ($i=0; $i < count($friendsParent); $i++) { 
-            $friends[count($friends)] = $friendsParent[$i];
-        }
+        // $friendsParent =  FriendRequest::whereTypeAndRequest('parent','accepted')->where('friend_user_id',auth()->user()->id)->pluck('id')->toArray();
+        // for ($i=0; $i < count($friendsParent); $i++) { 
+        //     $friends[count($friends)] = $friendsParent[$i];
+        // }
         // return $friends;
         // $my_stories = Story::where('user_id',Auth::user()->id)->where('created_at','>',$date)->get();
         // $all_stories = Story::with('user')->whereIn('user_id',$friends)->where('created_at','>',$date)->get();
