@@ -6,7 +6,8 @@ use App\Http\Controllers\API\{
             AuthenticationController,
             SettingController,
             StoriesController,
-            FriendRequestController
+            FriendRequestController,
+            HelperController
         };
 
 /*
@@ -48,5 +49,7 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('find-parent',[FriendRequestController::class,'searchParent']);
 
     Route::get('children-get',[FriendRequestController::class,'childrenGet']);
+
+    Route::post('help',[HelperController::class,'create']);
     
 });
