@@ -7,7 +7,8 @@ use App\Http\Controllers\API\{
             SettingController,
             StoriesController,
             FriendRequestController,
-            HelperController
+            HelperController,
+            ContactFinderController
         };
 
 /*
@@ -53,3 +54,4 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::post('help',[HelperController::class,'create']);
     
 });
+Route::post('find-contacts',[ContactFinderController::class,'contact']);
