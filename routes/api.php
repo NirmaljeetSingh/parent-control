@@ -8,7 +8,9 @@ use App\Http\Controllers\API\{
             StoriesController,
             FriendRequestController,
             HelperController,
-            ContactFinderController
+            ContactFinderController,
+            ReportUserController,
+            ReportStoryController
         };
 
 /*
@@ -33,6 +35,8 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::post('profile',[AuthenticationController::class,'profileUpdate']);
     Route::get('profile',[AuthenticationController::class,'profile']);
 
+    Route::delete('profile',[AuthenticationController::class,'profileDelete']);
+
     Route::resource('setting',SettingController::class);
     
     Route::resource('story',StoriesController::class);
@@ -52,6 +56,13 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('children-get',[FriendRequestController::class,'childrenGet']);
 
     Route::post('help',[HelperController::class,'create']);
+
+    Route::resource('report-user',ReportUserController::class,[
+        "only" => ['index','store']
+    ]);
+    Route::resource('report-story',ReportStoryController::class,[
+        "only" => ['index','store']
+    ]);
     
 });
 Route::post('find-contacts',[ContactFinderController::class,'contact']);

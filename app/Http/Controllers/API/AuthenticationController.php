@@ -82,5 +82,16 @@ class AuthenticationController extends Controller
     {
         return success_response(User::with('setting')->find(auth()->user()->id),'Profile data.');
     }
-
+    public function profileDelete()
+    {
+        $user_id = auth()->user()->id;
+        auth()->user()->delete();
+        try {
+            DB::table('chats')->where('user_1',$user_id)->delete();
+            DB::table('chats')->where('user_2',$user_id)->delete();
+        } catch (\Throwable $th) {
+            // throw $th;
+        }
+        return success_response([],'Profile deleted successfully.');
+    }
 }
