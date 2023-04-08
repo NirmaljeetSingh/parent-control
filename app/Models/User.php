@@ -56,7 +56,7 @@ class User extends Authenticatable
         'phone_no_verified_at' => 'datetime',
     ];
 
-    protected $appends = ['is_request'];
+    protected $appends = ['is_request','is_blocked'];
     protected function isRequest(): Attribute
     {
         $requested = 0;
@@ -79,6 +79,19 @@ class User extends Authenticatable
         }
         return Attribute::make(
             get: fn ($value) => $requested,
+        );
+    }
+    protected function isBlocked(): Attribute
+    {
+        $isBlocked = 0;
+        try {
+            $isBlocked = BlockedUnblockUser::where([
+                ['blocked_user_id',$this->id],['blocked_by_user_id',auth()->user()->id]
+            ])->count();
+        } catch (\Throwable $th) {
+        }
+        return Attribute::make(
+            get: fn ($value) => $isBlocked ?? 0,
         );
     }
     protected function phoneNo(): Attribute
