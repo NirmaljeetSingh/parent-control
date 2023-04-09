@@ -10,7 +10,8 @@ use App\Http\Controllers\API\{
             HelperController,
             ContactFinderController,
             ReportUserController,
-            ReportStoryController
+            ReportStoryController,
+            BlockUnblockUserController
         };
 
 /*
@@ -61,6 +62,9 @@ Route::middleware('auth:sanctum')->group(function(){
         "only" => ['index','store']
     ]);
     Route::resource('report-story',ReportStoryController::class,[
+        "only" => ['index','store']
+    ]);
+    Route::resource('block-user',BlockUnblockUserController::class,[
         "only" => ['index','store']
     ]);
     
