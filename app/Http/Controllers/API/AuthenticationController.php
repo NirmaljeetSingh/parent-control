@@ -31,7 +31,11 @@ class AuthenticationController extends Controller
             return error_response([],'SMS not send due to '.$th->getMessage());
         }
         $token = $user->createToken($user->phone_no)->plainTextToken;
-        return success_response(['user' => User::with('setting')->find($user->id),'token' => $token],'User registered.');
+        $user = User::with('setting')->find($user->id);
+        $otp = $user->otp;
+        $res = $user->toArray();
+        $res['otp'] = $otp;        
+        return success_response(['user' => $res,'token' => $token],'User registered.');
     }
     public function verify_no(Request $request)
     {
