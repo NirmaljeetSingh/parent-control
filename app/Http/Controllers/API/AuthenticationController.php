@@ -26,7 +26,7 @@ class AuthenticationController extends Controller
         $user->otp = $otp;
         $user->save();
         try {
-            // self::sms($phone_no,$otp);
+            self::sms($phone_no,$otp);
         } catch (\Throwable $th) {
             return error_response([],'SMS not send due to '.$th->getMessage());
         }
