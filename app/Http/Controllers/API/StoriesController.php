@@ -65,4 +65,8 @@ class StoriesController extends Controller
         $data = StoryView::updateOrCreate(['story_id' => $request->story_id,'user_id' => auth()->user()->id]);
         return success_response($data,'Data fetch successfully');
     }
+    public function destroy($storyId){
+        Story::find($storyId)?->delete();
+        return success_response([],'Data delete successfully');
+    }
 }
