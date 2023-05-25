@@ -24,13 +24,19 @@ class ContactFinderController extends Controller
             $phone = str_replace('+','',$braces);
             $phone_numbers[] = $phone;
             $temp_obj = ['firstName' => $val['firstName'] ?? '','number' => $val['number'] ?? '','lastName' => $val['lastName'] ?? ''];
-            if(User::where('phone_no', 'LIKE',"%{$phone}%")->exists())
-            {
-                $app_exists[] = $temp_obj;
-            }
-            else
-            {
-                $app_not_exists[] = $temp_obj;
+            try {
+                //code...
+                if(User::whereRaw("CONCAT(code,'',phone_no) LIKE '%{$phone}'")->exists())
+                {
+                    $app_exists[] = $temp_obj;
+                }
+                else
+                {
+                    $app_not_exists[] = $temp_obj;
+                }
+            } catch (\Throwable $th) {
+                // return  $th->getMessage();
+                // return User::whereRaw("CONCAT(code,'',phone_no) LIKE %{$phone}")->toSql();
             }
         }
         return success_response(['has_app' => $app_exists,'not_has_app' => $app_not_exists],'List fetch successfully.');

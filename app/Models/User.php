@@ -32,7 +32,8 @@ class User extends Authenticatable
         'fav_location',
         'bio',
         'parent_key',
-        'account_type'
+        'account_type',
+        'code'
     ];
 
     /**
@@ -94,7 +95,13 @@ class User extends Authenticatable
             get: fn ($value) => $isBlocked ?? 0,
         );
     }
-    protected function phoneNo(): Attribute
+    // protected function phoneNo(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn ($value) => ($value) ? '+'.$value : $value,
+    //     );
+    // }
+    protected function code(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => ($value) ? '+'.$value : $value,
