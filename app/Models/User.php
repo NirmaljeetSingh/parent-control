@@ -101,12 +101,12 @@ class User extends Authenticatable
     //         get: fn ($value) => ($value) ? '+'.$value : $value,
     //     );
     // }
-    protected function code(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => ($value) ? '+'.$value : $value,
-        );
-    }
+    // protected function code(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn ($value) => ($value) ? '+'.$value : $value,
+    //     );
+    // }
     protected function image(): Attribute
     {
         return Attribute::make(
