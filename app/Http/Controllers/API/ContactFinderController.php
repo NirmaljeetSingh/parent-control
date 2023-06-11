@@ -23,11 +23,12 @@ class ContactFinderController extends Controller
             $braces = str_replace(")","",str_replace("(","",$white_space));
             $phone = str_replace('+','',$braces);
             $phone_numbers[] = $phone;
-            $temp_obj = ['firstName' => $val['firstName'] ?? '','number' => $val['number'] ?? '','lastName' => $val['lastName'] ?? ''];
+            $temp_obj = ['firstName' => $val['firstName'] ?? '','number' => $val['number'] ?? '','lastName' => $val['lastName'] ?? '','user' => []];
             try {
                 //code...
-                if(User::whereRaw("CONCAT(code,'',phone_no) LIKE '%{$phone}'")->exists())
+                if($user = User::whereRaw("CONCAT(code,'',phone_no) LIKE '%{$phone}'")->first())
                 {
+                    $temp_obj['user'] = $user;
                     $app_exists[] = $temp_obj;
                 }
                 else
