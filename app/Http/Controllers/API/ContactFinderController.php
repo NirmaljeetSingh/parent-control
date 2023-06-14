@@ -15,9 +15,10 @@ class ContactFinderController extends Controller
             'data' => ['required'],
         ];
         if($er = __validation($request->all(),$rules)) return $er;
+        $data = json_decode($request->data,true);
         $app_exists = [];
         $app_not_exists = [];
-        foreach($request->data as $val){
+        foreach($data as $val){
             $hiphen_replace = str_replace("-","",$val['number']);
             $white_space = str_replace(" ","",$hiphen_replace);
             $braces = str_replace(")","",str_replace("(","",$white_space));
