@@ -70,3 +70,4 @@ Route::middleware('auth:sanctum')->group(function(){
     
 });
 Route::post('find-contacts',[ContactFinderController::class,'contact']);
+Route::post('find-contacts-json',[ContactFinderController::class,'contactJson']);
