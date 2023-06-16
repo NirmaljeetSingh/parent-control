@@ -68,6 +68,6 @@ Route::middleware('auth:sanctum')->group(function(){
         "only" => ['index','store']
     ]);
     
+    Route::post('find-contacts',[ContactFinderController::class,'contact']);
+    Route::post('find-contacts-json',[ContactFinderController::class,'contactJson']);
 });
-Route::post('find-contacts',[ContactFinderController::class,'contact']);
-Route::post('find-contacts-json',[ContactFinderController::class,'contactJson']);
