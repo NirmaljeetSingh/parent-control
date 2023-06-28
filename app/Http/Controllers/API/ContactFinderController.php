@@ -63,14 +63,14 @@ class ContactFinderController extends Controller
         $app_exists = [];
         $app_not_exists = [];
         $phone_numbers = [];
-        
+
         foreach($request->data as $val){
             $hiphen_replace = str_replace("-","",$val['number']);
             $white_space = str_replace(" ","",$hiphen_replace);
             $braces = str_replace(")","",str_replace("(","",$white_space));
             $phone = str_replace('+','',$braces);
-            $phone_numbers[] = $phone;
             if(!in_array($phone,$phone_numbers)){
+                $phone_numbers[] = $phone;
                 $temp_obj = ['firstName' => $val['firstName'] ?? '','number' => $val['number'] ?? '','lastName' => $val['lastName'] ?? '','user' => []];
                 try {
                     //code...
