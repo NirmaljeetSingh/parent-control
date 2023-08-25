@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{Story,FriendRequest,StoryView,User,BlockedUnblockUser};
+use App\Models\{Story,FriendRequest,StoryView,User,BlockedUnblockUser,Notification};
 use Auth;
 use App\Events\ActionEvent;
 use Carbon\Carbon;
@@ -48,6 +48,10 @@ class StoriesController extends Controller
             'image' => __upload($request->image,'stories'),
             'description' => $request->description ?? '',
             'user_id' => Auth::user()->id
+        ]);
+        Notification::create([
+            'story_id' => $story->id,
+            'user_id' => $story->user_id
         ]);
         return success_response(Story::find($story->id),'Data saved successfully');
     }
