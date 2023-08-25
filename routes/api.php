@@ -11,7 +11,8 @@ use App\Http\Controllers\API\{
             ContactFinderController,
             ReportUserController,
             ReportStoryController,
-            BlockUnblockUserController
+            BlockUnblockUserController,
+            NotificationController
         };
 
 /*
@@ -67,6 +68,8 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::resource('block-user',BlockUnblockUserController::class,[
         "only" => ['index','store']
     ]);
+    Route::get('notifications',[NotificationController::class,'index']);
+    Route::post('notifications',[NotificationController::class,'seen']);
     
     Route::post('find-contacts',[ContactFinderController::class,'contact']);
     Route::post('find-contacts-json',[ContactFinderController::class,'contactJson']);
