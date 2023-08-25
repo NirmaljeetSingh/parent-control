@@ -33,6 +33,6 @@ class NotificationController extends Controller
         if($er = __validation($request->all(),['ids' => 'required'])) return $er;
         $ids = $request->ids;
         $notification = Notification::whereIn('id',$ids)->update(['status' => 'seen']);
-        return success_response([],'Notification fetch.');
+        return success_response([],'Notification seen.');
     }
 }
