@@ -50,8 +50,9 @@ class StoriesController extends Controller
             'user_id' => Auth::user()->id
         ]);
         Notification::create([
-            'story_id' => $story->id,
-            'user_id' => $story->user_id
+            'reference_id' => $story->id,
+            'user_id' => Auth::user()->id,
+            'notification_type' => 'story'
         ]);
         return success_response(Story::find($story->id),'Data saved successfully');
     }

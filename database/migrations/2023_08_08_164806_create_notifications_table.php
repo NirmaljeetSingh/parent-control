@@ -15,10 +15,11 @@ return new class extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('story_id');
             $table->unsignedBigInteger('user_id');
+            $table->bigInteger('sender_id')->default(0);
+            $table->bigInteger('reference_id')->default(0);
+            $table->enum('notification_type',['message','story','friend_request','friend_request_accept','friend_request_reject'])->default('message');
             $table->enum('status',['open','seen'])->default('open');
-            $table->foreign('story_id')->references('id')->on('stories')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

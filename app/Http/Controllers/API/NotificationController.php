@@ -25,7 +25,16 @@ class NotificationController extends Controller
             $tmp_user_id = ($qr->user_id == $user_id) ? $qr->friend_user_id : $qr->user_id;
             $qr->_id = (in_array($tmp_user_id,$blocked_users)) ? 0 : $tmp_user_id;
         })->pluck('_id');
-        $notification = Notification::whereIn('id',$friends)->get();
+
+        $notification = Notification::where(function($qry) use($friends){
+            $qry->whereIn('user_id',$friends)->where('notification_type','story');
+        })
+        ->orWhere(function($qry) use($user_id){
+            $qry->where('sender_id',$user_id)->where('notification_type','!=','story');
+            // ->whereIn('notification_type',['friend_request_accept','friend_request_reject']);
+        // })->orWhere(function($qry) use($user_id){
+        //     $qry->where('user_id',$user_id)->whereIn('notification_type',['friend_request_accept','friend_request_reject']);
+        })->get();
 
         return success_response($notification,'Notification fetch.');
     }
