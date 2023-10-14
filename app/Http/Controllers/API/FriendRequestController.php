@@ -15,7 +15,8 @@ class FriendRequestController extends Controller
             'friend_user_id' => ['required','exists:users,id'],
         ];
         if($er = __validation($request->all(),$rules)) return $er;
-        
+        $getParent = FriendRequest::parentGet($request->friend_user_id)->first();
+
         $storeData = ['user_id' => auth()->user()->id,'friend_user_id' => $request->friend_user_id];
         if($request->type && $request->type == 'parent') $storeData['type'] = 'parent';
 
@@ -23,6 +24,14 @@ class FriendRequestController extends Controller
         if(auth()->user()->id == $request->friend_user_id) return error_response([],'Cannot make your self as a friend.',400);
         if(!$getFriend) {
             $getFriend = FriendRequest::create($storeData);
+            if($getParent && $request->type != 'parent'){
+                // friend_user_id
+                $parentRequest = FriendRequest::create([
+                    'user_id' => $getParent->id,'friend_user_id' => auth()->user()->id
+                ]);
+                $getFriend->update(['parent_id' => $parentRequest->id]);
+            }
+            
             Notification::create([
                 'reference_id' => $getFriend->id,
                 'user_id' => Auth::user()->id,
@@ -34,7 +43,7 @@ class FriendRequestController extends Controller
     }
     public function index(Request $request)
     {
-        $getFriend = FriendRequest::where('user_id',auth()->user()->id)->orWhere('friend_user_id',auth()->user()->id)->get();
+        $getFriend = FriendRequest::friendsOnly(auth()->user()->id)->get();
         return success_response($getFriend,'Friend list fetch successfully.');
     }
     public function childrenGet(Request $request)
@@ -63,12 +72,15 @@ class FriendRequestController extends Controller
         if($er = __validation($request->all(),$rules)) return $er;
         $getFriend = FriendRequest::find($request->friend_request_id);
         $getFriend->update(['request' => 'accepted']);
-        Notification::create([
-            'reference_id' => $getFriend->id,
-            'user_id' => Auth::user()->id,
-            'sender_id' => $getFriend->user_id,
-            'notification_type' => 'friend_request_accept'
-        ]);
+
+        if($getFriend->parent_id == 0){
+            Notification::create([
+                'reference_id' => $getFriend->id,
+                'user_id' => Auth::user()->id,
+                'sender_id' => $getFriend->user_id,
+                'notification_type' => 'friend_request_accept'
+            ]);
+        }
         return success_response($getFriend,'Friend request accepted.');
     }
     public function rejectRequest(Request $request)
@@ -80,12 +92,14 @@ class FriendRequestController extends Controller
         $getFriend = FriendRequest::find($request->friend_request_id);
         $getFriend->update(['request' => 'reject']);
 
-        Notification::create([
-            'reference_id' => $getFriend->id,
-            'user_id' => Auth::user()->id,
-            'sender_id' => $getFriend->user_id,
-            'notification_type' => 'friend_request_reject'
-        ]);
+        if($getFriend->parent_id == 0){
+            Notification::create([
+                'reference_id' => $getFriend->id,
+                'user_id' => Auth::user()->id,
+                'sender_id' => $getFriend->user_id,
+                'notification_type' => 'friend_request_reject'
+            ]);
+        }
         return success_response($getFriend,'Friend request rejected.');
     }
     public function blockFriend(Request $request)
@@ -106,9 +120,8 @@ class FriendRequestController extends Controller
         // if($er = __validation($request->all(),$rules)) return $er;
         $search = $request->search ?? '';
         $user_id = auth()->user()->id;
-        $friends =  FriendRequest::where(function($rr) use($user_id){
-            $rr->where('user_id',$user_id)->orWhere('friend_user_id',$user_id);
-        })->where('request','accepted')->get()->each(function($qr) use($user_id){
+        $friends =  FriendRequest::friendsOnly(auth()->user()->id)
+        ->where('friend_requests.request','accepted')->get()->each(function($qr) use($user_id){
             $qr->_id = ($qr->user_id == $user_id) ? $qr->friend_user_id : $qr->user_id;
         })->pluck('_id')->toArray();
         $findFriend = User::when($search,function($qr) use($search){
