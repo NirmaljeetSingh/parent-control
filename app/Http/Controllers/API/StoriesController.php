@@ -23,7 +23,7 @@ class StoriesController extends Controller
         $blocked_users = BlockedUnblockUser::where('blocked_by_user_id',$user_id)->pluck('blocked_user_id')->toArray();
         
         $friends =  FriendRequest::friendsOnly($user_id)
-        ->where('friend_requests.request','accepted')->whereType('friend')->get()
+        ->where('friend_requests.request','accepted')->where('friend_requests.type','friend')->get()
         ->each(function($qr) use($user_id,$blocked_users){
             $tmp_user_id = ($qr->user_id == $user_id) ? $qr->friend_user_id : $qr->user_id;
             $qr->_id = (in_array($tmp_user_id,$blocked_users)) ? 0 : $tmp_user_id;
