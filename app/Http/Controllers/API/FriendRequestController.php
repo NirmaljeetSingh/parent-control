@@ -27,7 +27,7 @@ class FriendRequestController extends Controller
             if($getParent && $request->type != 'parent'){
                 // friend_user_id
                 $parentRequest = FriendRequest::create([
-                    'user_id' => $getParent->id,'friend_user_id' => $request->friend_user_id
+                    'user_id' => $getParent->friend_user_id,'friend_user_id' => auth()->user()->id
                 ]);
                 $getFriend->update(['parent_id' => $parentRequest->id]);
             }
