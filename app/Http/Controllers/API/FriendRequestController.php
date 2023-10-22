@@ -15,7 +15,7 @@ class FriendRequestController extends Controller
             'friend_user_id' => ['required','exists:users,id'],
         ];
         if($er = __validation($request->all(),$rules)) return $er;
-        $getParent = FriendRequest::parentGet($request->friend_user_id)->first();
+        $getParent = FriendRequest::parentGet($request->friend_user_id)->orderBy('id','desc')->first();
 
         $storeData = ['user_id' => auth()->user()->id,'friend_user_id' => $request->friend_user_id];
         if($request->type && $request->type == 'parent') $storeData['type'] = 'parent';
