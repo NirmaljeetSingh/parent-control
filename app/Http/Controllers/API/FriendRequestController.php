@@ -56,7 +56,8 @@ class FriendRequestController extends Controller
         $getFriend = FriendRequest::with('user')->where('friend_user_id',auth()->user()->id)
             ->where('request','pending')
         // ->orWhere('user_id',auth()->user()->id)
-        ->get();
+        ->toSql();
+        return [$getFriend,auth()->user()];
         // $getFriend->each(function($val){
         //     $val->request_user = ($val->user_id == auth()->user()->id) ? $val->friend_user : $val->user;
         //     unset($val->user);
