@@ -27,7 +27,7 @@ class FriendRequestController extends Controller
             if($getParent && $request->type != 'parent'){
                 // friend_user_id
                 $parentRequest = FriendRequest::create([
-                    'user_id' => $getParent->friend_user_id,'friend_user_id' => auth()->user()->id
+                    'user_id' => auth()->user()->id,'friend_user_id' => $getParent->friend_user_id
                 ]);
                 $getFriend->update(['parent_id' => $parentRequest->id]);
             }
@@ -56,8 +56,7 @@ class FriendRequestController extends Controller
         $getFriend = FriendRequest::with('user')->where('friend_user_id',auth()->user()->id)
             ->where('request','pending')
         // ->orWhere('user_id',auth()->user()->id)
-        ->toSql();
-        return [$getFriend,auth()->user()];
+        ->get();
         // $getFriend->each(function($val){
         //     $val->request_user = ($val->user_id == auth()->user()->id) ? $val->friend_user : $val->user;
         //     unset($val->user);
